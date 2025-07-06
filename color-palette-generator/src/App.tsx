@@ -8,10 +8,18 @@ import { PALETTE_STEPS } from './types/color';
 import './App.css';
 
 function App() {
-  const { baseColorHex, colorSets, allGeneratedPalettes, suggestedStep, error, updateBaseColor } = useColorPalette();
+  const { baseColorHex, basePalette, lighterPalette, darkerPalette, updateBaseColor } = useColorPalette();
   const [selectedStep, setSelectedStep] = useState(5); // Default to step 500 (index 5)
   const [colorDefaultStep, setColorDefaultStep] = useState(5);
-  const [selectedPalette, setSelectedPalette] = useState<number | null>(null);
+  const [selectedPalette, setSelectedPalette] = useState<number | null>(0);
+  const [paletteType, setPaletteType] = useState<'base' | 'lighter' | 'darker'>('base');
+  
+  // Get current palette based on selection
+  const currentPalette = paletteType === 'base' ? basePalette : 
+                        paletteType === 'lighter' ? lighterPalette : 
+                        darkerPalette;
+  
+  const { colorSets, allGeneratedPalettes, suggestedStep, error } = currentPalette;
   
   // Update selected step when suggested step changes
   useEffect(() => {
@@ -26,6 +34,19 @@ function App() {
           onChange={updateBaseColor}
           error={error}
         />
+        
+        <div className="palette-type-selector">
+          <label>Palette Type:</label>
+          <select 
+            value={paletteType} 
+            onChange={(e) => setPaletteType(e.target.value as 'base' | 'lighter' | 'darker')}
+          >
+            <option value="base">Base</option>
+            <option value="lighter">Lighter</option>
+            <option value="darker">Darker</option>
+          </select>
+        </div>
+        
         <PaletteList
           colorSets={colorSets}
           selectedStep={colorDefaultStep}

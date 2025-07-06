@@ -27,3 +27,24 @@
   overflow-y: auto;
   min-height: 0;
 }
+
+.palette-type-selector {
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.palette-type-selector label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #666;
+}
+
+.palette-type-selector select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+}

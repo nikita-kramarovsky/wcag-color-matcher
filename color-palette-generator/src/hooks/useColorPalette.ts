@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { parseHexColor } from '../utils/colorConversions';
+import { parseHexColor, convertRgbToHsl, convertHslToRgb } from '../utils/colorConversions';
 import { useColorPaletteGeneration } from './useColorPaletteGeneration';
 
 export function useColorPalette(initialColor: string = '#6200EE') {
@@ -11,7 +11,27 @@ export function useColorPalette(initialColor: string = '#6200EE') {
       return undefined;
     }
   }, [baseColorHex]);
-  const { colorSets, allGeneratedPalettes, suggestedStep, error } = useColorPaletteGeneration(baseColor);
+  const basePalette = useColorPaletteGeneration(baseColor);
+
+  const lighterColor = useMemo(() => {
+    if (!baseColor) return undefined;
+    const baseHsl = convertRgbToHsl(baseColor);
+    return convertHslToRgb({
+      ...baseHsl,
+      lightness: Math.min(baseHsl.lightness + 0.2, 1)
+    });
+  }, [baseColor]);
+  const lighterPalette = useColorPaletteGeneration(lighterColor);
+
+  const darkerColor = useMemo(() => {
+    if (!baseColor) return undefined;
+    const baseHsl = convertRgbToHsl(baseColor);
+    return convertHslToRgb({
+      ...baseHsl,
+      lightness: Math.max(baseHsl.lightness - 0.2, 0)
+    });
+  }, [baseColor]);
+  const darkerPalette = useColorPaletteGeneration(darkerColor);
 
   const updateBaseColor = useCallback((newColor: string) => {
     setBaseColorHex(newColor);
@@ -19,10 +39,9 @@ export function useColorPalette(initialColor: string = '#6200EE') {
 
   return {
     baseColorHex,
-    colorSets,
-    allGeneratedPalettes,
-    suggestedStep,
-    error,
+    basePalette,
+    lighterPalette,
+    darkerPalette,
     updateBaseColor
   };
 }
