@@ -1,5 +1,5 @@
 import type { PALETTE_STEPS, ColorRGBA } from '../types/color';
-import { formatColorValue } from '../utils/colorConversions';
+import { formatColorValue, getHexValue } from '../utils/colorConversions';
 import { getColorLightness } from '../utils/colorContrast';
 import './StepTabs.css';
 
@@ -19,10 +19,13 @@ export function StepTabs({ steps, selectedStep, onStepChange, selectedPalette, a
       {steps.map((step, index) => {
         const color = selectedPaletteColors?.[index];
         const backgroundColor = color ? formatColorValue(color) : '#f0f0f0';
+        const hexValue = color ? getHexValue(color) : '';
         const isActive = selectedStep === index;
         
         // Determine text color based on background lightness
-        const textColor = color && getColorLightness(color) === 0 ? '#ffffff' : '#000000';
+        // getColorLightness returns 0 for white text (dark background), 1 for black text (light background)
+        const shouldUseWhiteText = color ? getColorLightness(color) === 0 : false;
+        const textColor = shouldUseWhiteText ? '#ffffff' : '#000000';
         
         return (
           <button
@@ -31,7 +34,10 @@ export function StepTabs({ steps, selectedStep, onStepChange, selectedPalette, a
             onClick={() => onStepChange(index)}
             style={{ backgroundColor }}
           >
-            <span className="step-label" style={{ color: textColor }}>{step}</span>
+            <div className="step-content" style={{ color: textColor }}>
+              <span className="step-number">{step}</span>
+              {hexValue && <span className="step-hex">{hexValue}</span>}
+            </div>
           </button>
         );
       })}

@@ -45,13 +45,13 @@ export function useColorPalette(initialColor: string = '#6200EE') {
     const allGeneratedPalettes = allColors.map(color => generateColorPalette(color));
 
     const colorSets: ColorSet[] = [
-      { colors: [baseColor], title: 'Primary Palette', paletteIndex: 0 },
-      { colors: [complementaryColor], title: 'Complementary Palette', paletteIndex: 1 },
-      { colors: splitComplementaryColors, title: 'Split Complementary Palette', paletteIndex: 2 },
-      { colors: analogousColors, title: 'Analogous Palette', paletteIndex: 4 },
-      { colors: triadicColors, title: 'Triadic Palette', paletteIndex: 6 },
-      { colors: [whiteColor], title: 'White Palette', paletteIndex: 10 },
-      { colors: [blackColor], title: 'Black Palette', paletteIndex: 11 }
+      { colors: [baseColor], title: 'Primary Colour', paletteIndex: 0 },
+      { colors: [complementaryColor], title: 'Complementary Colours', paletteIndex: 1 },
+      { colors: splitComplementaryColors, title: 'Split Complementary Colours', paletteIndex: 2 },
+      { colors: analogousColors, title: 'Analogous Colours', paletteIndex: 4 },
+      { colors: triadicColors, title: 'Triadic Colours', paletteIndex: 6 },
+      { colors: [whiteColor], title: 'White Colour', paletteIndex: 10 },
+      { colors: [blackColor], title: 'Black Colour', paletteIndex: 11 }
     ];
 
     return { colorSets, allGeneratedPalettes };
