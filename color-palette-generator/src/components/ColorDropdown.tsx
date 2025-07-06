@@ -51,9 +51,13 @@ export function ColorDropdown({ options, value, onChange, placeholder }: ColorDr
                 className="color-swatch"
                 style={{ backgroundColor: formatColorValue(selectedOption.color) }}
               />
-              <span className="selected-text">
-                {selectedOption.hex} - {selectedOption.ratio.toFixed(1)}:1
-              </span>
+              <div className="selected-info">
+                <div className="selected-main">
+                  <span className="selected-hex">{selectedOption.hex}</span>
+                  <span className="selected-ratio">{selectedOption.ratio.toFixed(1)}:1</span>
+                </div>
+                <div className="selected-source">{selectedOption.source}</div>
+              </div>
             </>
           ) : (
             <span className="placeholder-text">{placeholder}</span>

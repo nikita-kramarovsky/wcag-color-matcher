@@ -40,9 +40,33 @@
   flex-shrink: 0;
 }
 
-.selected-text {
+.selected-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.selected-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selected-hex {
   color: #333;
   font-family: 'Courier New', monospace;
+  font-weight: 600;
+}
+
+.selected-ratio {
+  color: #666;
+  font-size: 12px;
+}
+
+.selected-source {
+  color: #999;
+  font-size: 11px;
 }
 
 .placeholder-text {

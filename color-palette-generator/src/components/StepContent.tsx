@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { ColorSet, ColorRGBA } from '../types/color';
 import { formatColorValue, getHexValue } from '../utils/colorConversions';
-import { calculateContrastRatio } from '../utils/colorContrast';
+import { calculateContrastRatio, getColorLightness } from '../utils/colorContrast';
 import { ColorDropdown } from './ColorDropdown';
 import './StepContent.css';
 
@@ -133,14 +133,6 @@ export function StepContent({ colorSets, selectedStep, allGeneratedPalettes, sel
           
           {selectedTextColorObj && (
             <div className="selected-example">
-              <h4>
-                Selected: 
-                <span 
-                  className="color-preview-swatch"
-                  style={{ backgroundColor: formatColorValue(selectedTextColorObj.color) }}
-                />
-                {selectedTextColorObj.hex} - {selectedTextColorObj.source}
-              </h4>
               <div 
                 className="text-example"
                 style={{ 
@@ -167,33 +159,34 @@ export function StepContent({ colorSets, selectedStep, allGeneratedPalettes, sel
           
           {selectedElementColorObj && (
             <div className="selected-example">
-              <h4>
-                Selected: 
-                <span 
-                  className="color-preview-swatch"
-                  style={{ backgroundColor: formatColorValue(selectedElementColorObj.color) }}
-                />
-                {selectedElementColorObj.hex} - {selectedElementColorObj.source}
-              </h4>
               <div 
                 className="element-examples"
                 style={{ backgroundColor: formatColorValue(currentStepColor) }}
               >
                 <button 
                   className="sample-button"
-                  style={{ backgroundColor: formatColorValue(selectedElementColorObj.color) }}
+                  style={{ 
+                    backgroundColor: formatColorValue(selectedElementColorObj.color),
+                    color: getColorLightness(selectedElementColorObj.color) === 0 ? '#ffffff' : '#000000'
+                  }}
                 >
                   Button Example
                 </button>
                 <div 
                   className="sample-card"
-                  style={{ backgroundColor: formatColorValue(selectedElementColorObj.color) }}
+                  style={{ 
+                    backgroundColor: formatColorValue(selectedElementColorObj.color),
+                    color: getColorLightness(selectedElementColorObj.color) === 0 ? '#ffffff' : '#000000'
+                  }}
                 >
                   Card Element
                 </div>
                 <div 
                   className="sample-border"
-                  style={{ borderColor: formatColorValue(selectedElementColorObj.color) }}
+                  style={{ 
+                    borderColor: formatColorValue(selectedElementColorObj.color),
+                    color: getColorLightness(currentStepColor) === 0 ? '#ffffff' : '#000000'
+                  }}
                 >
                   Border Element
                 </div>
