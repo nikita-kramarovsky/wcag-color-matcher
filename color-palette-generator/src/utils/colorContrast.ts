@@ -2,6 +2,12 @@ import type { ColorRGBA } from '../types/color';
 import { linearizeColorValue, getOpaqueColor } from './colorConversions';
 import { createColorRGBA, WHITE_COLOR, BLACK_COLOR, ALPHA_THRESHOLD } from './colorClasses';
 
+/**
+ * Calculates the contrast ratio between two colors according to WCAG guidelines.
+ * @param foregroundColor - The foreground color
+ * @param backgroundColor - The background color
+ * @returns The contrast ratio (1:1 to 21:1)
+ */
 export function calculateContrastRatio(foregroundColor: ColorRGBA, backgroundColor: ColorRGBA): number {
   const backgroundOpaque = getOpaqueColor(backgroundColor);
   let foreground = foregroundColor;
@@ -29,6 +35,11 @@ export function calculateContrastRatio(foregroundColor: ColorRGBA, backgroundCol
     (backgroundLuminance + 0.05) / (foregroundLuminance + 0.05);
 }
 
+/**
+ * Determines whether to use light (0) or dark (1) text on a given background color.
+ * @param color - The background color to test
+ * @returns 0 for light text, 1 for dark text
+ */
 export function getColorLightness(color: ColorRGBA): number {
   const minContrastRatio = 4.5; // WCAG AA for normal text
   const whiteContrast = calculateContrastRatio(WHITE_COLOR, color);
@@ -37,12 +48,14 @@ export function getColorLightness(color: ColorRGBA): number {
   return blackContrast >= minContrastRatio ? 1 : (whiteContrast > blackContrast ? 0 : 1);
 }
 
+/** High contrast color palette for light backgrounds */
 export const HighContrastColors = {
   HIGH: createColorRGBA(1, 1, 1, 1),      // White
   MEDIUM: createColorRGBA(1, 1, 1, 0.6),  // White 60% opacity
   DISABLED: createColorRGBA(1, 1, 1, 0.38) // White 38% opacity
 };
 
+/** Default contrast color palette for dark backgrounds */
 export const DefaultContrastColors = {
   HIGH: createColorRGBA(0, 0, 0, 0.87),   // Black 87% opacity
   MEDIUM: createColorRGBA(0, 0, 0, 0.6),  // Black 60% opacity

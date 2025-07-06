@@ -1,16 +1,30 @@
 import type { ColorRGBA, ColorHSL, ColorHSV, ColorLAB, ColorLCH } from '../types/color';
 import { createColorRGBA, createColorHSL, createColorHSV, createColorLAB, createColorLCH, clampValue, ALPHA_THRESHOLD } from './colorClasses';
 
-// Color format conversions
+/**
+ * Formats a ColorRGBA object as a CSS rgba() string with percentage values.
+ * @param color - The ColorRGBA object to format
+ * @returns A CSS rgba() string representation
+ */
 export function formatColorValue(color: ColorRGBA): string {
   return `rgba(${Math.round(color.red * 100)}%, ${Math.round(color.green * 100)}%, ${Math.round(color.blue * 100)}%, ${color.alpha})`;
 }
 
+/**
+ * Converts a numeric value to a 2-digit hexadecimal string.
+ * @param value - The numeric value to convert
+ * @returns A 2-digit hexadecimal string
+ */
 export function convertToHex(value: number): string {
   const hex = Math.round(value).toString(16);
   return hex.length === 1 ? '0' + hex : hex;
 }
 
+/**
+ * Converts a ColorRGBA object to a hexadecimal color string.
+ * @param color - The ColorRGBA object to convert
+ * @returns A hexadecimal color string (e.g., #FF0000 or #FF0000FF with alpha)
+ */
 export function getHexValue(color: ColorRGBA): string {
   const alphaHex = 1 - color.alpha < ALPHA_THRESHOLD ? '' : convertToHex(Math.round(255 * color.alpha));
   return '#' + convertToHex(Math.round(255 * color.red)) + 
@@ -18,6 +32,12 @@ export function getHexValue(color: ColorRGBA): string {
          convertToHex(Math.round(255 * color.blue)) + alphaHex;
 }
 
+/**
+ * Parses a hexadecimal color string into a ColorRGBA object.
+ * @param hexString - The hexadecimal color string to parse (e.g., #FF0000, #F00, #FF0000FF)
+ * @returns A ColorRGBA object
+ * @throws {Error} When the hex string format is invalid
+ */
 export function parseHexColor(hexString: string): ColorRGBA {
   const cleanHex = hexString.startsWith('#') ? hexString.substring(1) : hexString;
   
@@ -45,27 +65,49 @@ export function parseHexColor(hexString: string): ColorRGBA {
   return createColorRGBA(red, green, blue, alpha);
 }
 
-// Gamma correction functions
+/**
+ * Converts a sRGB color value to linear RGB using gamma correction.
+ * @param value - The sRGB color value (0-1)
+ * @returns The linear RGB value (0-1)
+ */
 export function linearizeColorValue(value: number): number {
   return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
 }
 
+/**
+ * Converts a linear RGB color value to sRGB using gamma correction.
+ * @param value - The linear RGB color value (0-1)
+ * @returns The sRGB value (0-1)
+ */
 export function delinearizeColorValue(value: number): number {
   return value <= 0.0031308 ? 12.92 * value : 1.055 * Math.pow(value, 1 / 2.4) - 0.055;
 }
 
-// LAB normalization functions
+/**
+ * Normalizes a value for LAB color space conversion.
+ * @param value - The value to normalize
+ * @returns The normalized value
+ */
 export function normalizeLab(value: number): number {
   const threshold = 6 / 29;
   return value > Math.pow(threshold, 3) ? Math.pow(value, 1 / 3) : (1 / (3 * Math.pow(threshold, 2))) * value + 4 / 29;
 }
 
+/**
+ * Denormalizes a value from LAB color space conversion.
+ * @param value - The value to denormalize
+ * @returns The denormalized value
+ */
 export function denormalizeLab(value: number): number {
   const threshold = 6 / 29;
   return value > threshold ? Math.pow(value, 3) : (3 * Math.pow(threshold, 2)) * (value - 4 / 29);
 }
 
-// Color space conversions
+/**
+ * Converts a ColorRGBA object to ColorHSL (Hue, Saturation, Lightness).
+ * @param rgbColor - The ColorRGBA object to convert
+ * @returns A ColorHSL object
+ */
 export function convertRgbToHsl(rgbColor: ColorRGBA): ColorHSL {
   const maxValue = Math.max(rgbColor.red, rgbColor.green, rgbColor.blue);
   const minValue = Math.min(rgbColor.red, rgbColor.green, rgbColor.blue);
@@ -90,6 +132,11 @@ export function convertRgbToHsl(rgbColor: ColorRGBA): ColorHSL {
   return createColorHSL(hue, saturation, lightness, rgbColor.alpha);
 }
 
+/**
+ * Converts a ColorHSL object to ColorRGBA (Red, Green, Blue, Alpha).
+ * @param hslColor - The ColorHSL object to convert
+ * @returns A ColorRGBA object
+ */
 export function convertHslToRgb(hslColor: ColorHSL): ColorRGBA {
   const chroma = (1 - Math.abs(2 * hslColor.lightness - 1)) * hslColor.saturation;
   const m = hslColor.lightness - chroma / 2;
@@ -108,6 +155,11 @@ export function convertHslToRgb(hslColor: ColorHSL): ColorRGBA {
   return createColorRGBA(r + m, g + m, b + m, hslColor.alpha);
 }
 
+/**
+ * Converts a ColorRGBA object to ColorHSV (Hue, Saturation, Value).
+ * @param rgbColor - The ColorRGBA object to convert
+ * @returns A ColorHSV object
+ */
 export function convertRgbToHsv(rgbColor: ColorRGBA): ColorHSV {
   const maxValue = Math.max(rgbColor.red, rgbColor.green, rgbColor.blue);
   const minValue = Math.min(rgbColor.red, rgbColor.green, rgbColor.blue);
@@ -128,6 +180,11 @@ export function convertRgbToHsv(rgbColor: ColorRGBA): ColorHSV {
   return createColorHSV(hue, saturation, maxValue, rgbColor.alpha);
 }
 
+/**
+ * Converts a ColorHSV object to ColorRGBA (Red, Green, Blue, Alpha).
+ * @param hsvColor - The ColorHSV object to convert
+ * @returns A ColorRGBA object
+ */
 export function convertHsvToRgb(hsvColor: ColorHSV): ColorRGBA {
   const chroma = hsvColor.value * hsvColor.saturation;
   const m = hsvColor.value - chroma;
@@ -146,6 +203,11 @@ export function convertHsvToRgb(hsvColor: ColorHSV): ColorRGBA {
   return createColorRGBA(r + m, g + m, b + m, hsvColor.alpha);
 }
 
+/**
+ * Converts a ColorRGBA object to ColorLAB (L*a*b*) color space.
+ * @param rgbColor - The ColorRGBA object to convert
+ * @returns A ColorLAB object
+ */
 export function convertRgbToLab(rgbColor: ColorRGBA): ColorLAB {
   const linearRed = linearizeColorValue(rgbColor.red);
   const linearGreen = linearizeColorValue(rgbColor.green);
@@ -172,6 +234,11 @@ export function convertRgbToLab(rgbColor: ColorRGBA): ColorLAB {
   return createColorLAB(L, a, b, rgbColor.alpha);
 }
 
+/**
+ * Converts a ColorLAB object to ColorLCH (Lightness, Chroma, Hue).
+ * @param labColor - The ColorLAB object to convert
+ * @returns A ColorLCH object
+ */
 export function convertLabToLch(labColor: ColorLAB): ColorLCH {
   return createColorLCH(
     labColor.lightness,
@@ -181,6 +248,11 @@ export function convertLabToLch(labColor: ColorLAB): ColorLCH {
   );
 }
 
+/**
+ * Converts a ColorHSV object to ColorHSL (Hue, Saturation, Lightness).
+ * @param hsvColor - The ColorHSV object to convert
+ * @returns A ColorHSL object
+ */
 export function convertHsvToHsl(hsvColor: ColorHSV): ColorHSL {
   const lightness = clampValue((2 - hsvColor.saturation) * hsvColor.value / 2, 0, 1);
   let saturation = 0;
@@ -191,10 +263,21 @@ export function convertHsvToHsl(hsvColor: ColorHSV): ColorHSL {
   return createColorHSL(hsvColor.hue, saturation, lightness, hsvColor.alpha);
 }
 
+/**
+ * Adjusts the hue of a ColorHSL object by a given delta value.
+ * @param hslColor - The ColorHSL object to adjust
+ * @param hueDelta - The amount to adjust the hue by (in degrees)
+ * @returns A new ColorHSL object with adjusted hue
+ */
 export function adjustHue(hslColor: ColorHSL, hueDelta: number): ColorHSL {
   return createColorHSL((hslColor.hue + hueDelta + 360) % 360, hslColor.saturation, hslColor.lightness, hslColor.alpha);
 }
 
+/**
+ * Returns an opaque version of a color (alpha = 1) if it's not already opaque.
+ * @param color - The ColorRGBA object to make opaque
+ * @returns A ColorRGBA object with full opacity
+ */
 export function getOpaqueColor(color: ColorRGBA): ColorRGBA {
   return 1 - color.alpha < ALPHA_THRESHOLD ? color : createColorRGBA(color.red, color.green, color.blue);
 }

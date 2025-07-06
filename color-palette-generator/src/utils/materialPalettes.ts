@@ -2,7 +2,7 @@ import type { ColorLAB, ColorRGBA, PaletteMatch } from '../types/color';
 import { createColorLAB, createColorRGBA, createColorLCH, clampValue } from './colorClasses';
 import { convertLabToLch, convertRgbToLab, delinearizeColorValue, denormalizeLab } from './colorConversions';
 
-// Material Design color palettes in LAB color space
+/** Material Design color palettes in LAB color space */
 export const MATERIAL_PALETTES: ColorLAB[][] = [
   [createColorLAB(94.67497003305085, 7.266715066863771, 1.000743882272359), createColorLAB(86.7897416761699, 18.370736761658012, 4.23637133971424), createColorLAB(72.0939162832561, 31.7948058298117, 13.2972443996896), createColorLAB(61.79353370051851, 44.129498163764545, 20.721477326799608), createColorLAB(57.194195398949574, 59.6450006197361, 34.999830012940194), createColorLAB(55.603951071861374, 66.01287384845483, 47.67169313982772), createColorLAB(51.66348502954747, 64.7487785020625, 43.244876694855286), createColorLAB(47.09455666350969, 62.29836039074277, 40.67775424698388), createColorLAB(43.77122063388739, 60.28633509183384, 40.31444686692952), createColorLAB(39.555187078007386, 58.703681355389975, 41.66495027798629)],
   [createColorLAB(92.68053776327665, 9.515385232804263, -0.8994072969754852), createColorLAB(81.86756643628922, 25.05688089723257, -1.9475235115390621), createColorLAB(70.90987389545768, 42.21705257720526, -1.095154624057959), createColorLAB(61.08140805216186, 58.871233307587204, 2.1008764804626434), createColorLAB(54.97970219986448, 68.56530938366889, 7.327430728560569), createColorLAB(50.872250340749176, 74.60459195925529, 15.353576256896073), createColorLAB(47.27738650144558, 70.77855776427805, 11.70434273264508), createColorLAB(42.58424189486517, 65.5411953138309, 7.595596439803797), createColorLAB(37.977492407254836, 60.74362621842075, 2.9847124951453474), createColorLAB(29.699290034849604, 51.90485023721311, -4.830186634107636)],
@@ -25,22 +25,37 @@ export const MATERIAL_PALETTES: ColorLAB[][] = [
   [createColorLAB(94.27665212516236, -0.637571046109342, -1.313515378996688), createColorLAB(85.77788001492097, -2.2777811084512822, -3.0177758416151557), createColorLAB(76.12296325015231, -3.401502988883809, -5.16867892977908), createColorLAB(66.16340108908365, -4.819627183079045, -7.520697631614404), createColorLAB(58.35752478513645, -5.7195089100892105, -9.165988916613488), createColorLAB(50.70748082202715, -6.837992965799455, -10.956055112409357), createColorLAB(44.85917867647632, -6.411990559239578, -9.74511982878765), createColorLAB(36.92458930566504, -5.319878610845596, -8.341943474561553), createColorLAB(29.115334784637618, -4.168907828645069, -6.8629962199973304), createColorLAB(19.958338450799914, -3.3116721453186617, -5.4486142104736786)]
 ];
 
+/** Lightness adjustment values for palette generation */
 export const LIGHTNESS_VALUES = [
   2.048875457, 5.124792061, 8.751659557, 12.07628774, 13.91449542,
   15.92738893, 15.46585818, 15.09779227, 15.13738673, 15.09818372
 ];
 
+/** Chroma adjustment values for palette generation */
 export const CHROMA_VALUES = [
   1.762442714, 4.213532634, 7.395827458, 11.07174158, 13.89634504,
   16.37591477, 16.27071136, 16.54160806, 17.35916727, 19.88410864
 ];
 
+/**
+ * Calculates the angle in degrees from a and b components of LAB color space.
+ * @param a - The a component of LAB color
+ * @param b - The b component of LAB color
+ * @returns The angle in degrees (0-360)
+ */
 function calculateAngle(a: number, b: number): number {
   if (0.0001 > Math.abs(a) && 0.0001 > Math.abs(b)) return 0;
   const angle = 180 * Math.atan2(a, b) / Math.PI;
   return 0 <= angle ? angle : angle + 360;
 }
 
+/**
+ * Finds the closest palette and color index to a target LAB color using CIEDE2000 color difference.
+ * @param targetLab - The target color in LAB color space
+ * @param palettes - Array of color palettes to search through (defaults to MATERIAL_PALETTES)
+ * @returns An object containing the closest palette and the color index within that palette
+ * @throws {Error} When palettes array is empty or invalid
+ */
 export function findClosestPalette(targetLab: ColorLAB, palettes: ColorLAB[][] = MATERIAL_PALETTES): PaletteMatch {
   if (!palettes.length || !palettes[0].length) {
     throw new Error('Invalid golden palettes');
@@ -125,6 +140,14 @@ export function findClosestPalette(targetLab: ColorLAB, palettes: ColorLAB[][] =
   return { closestPalette, colorIndex };
 }
 
+/**
+ * Generates a complete Material Design color palette from a base color.
+ * The function finds the closest Material Design palette to the base color and adjusts
+ * all palette colors to match the base color's characteristics while maintaining
+ * the relative relationships between palette steps.
+ * @param baseColor - The base ColorRGBA to generate a palette from
+ * @returns An array of 10 ColorRGBA objects representing the complete palette (50-900 steps)
+ */
 export function generateColorPalette(baseColor: ColorRGBA): ColorRGBA[] {
   const labColor = convertRgbToLab(baseColor);
   const paletteMatch = findClosestPalette(labColor);
