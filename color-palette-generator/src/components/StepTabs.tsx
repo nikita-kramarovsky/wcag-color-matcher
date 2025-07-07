@@ -34,9 +34,9 @@ export function StepTabs({ steps, selectedStep, onStepChange, selectedPalette, a
             onClick={() => onStepChange(index)}
             style={{ backgroundColor }}
           >
-            <div className="step-content" style={{ color: textColor }}>
-              <span className="step-number">{step}</span>
-              {hexValue && <span className="step-hex">{hexValue}</span>}
+            <div className="step-tab-content" style={{ color: textColor }}>
+              <span className="step-tab-number">{step}</span>
+              {hexValue && <span className="step-tab-hex">{hexValue}</span>}
             </div>
           </button>
         );
