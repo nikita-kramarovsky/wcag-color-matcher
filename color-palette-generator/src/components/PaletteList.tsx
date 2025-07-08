@@ -5,12 +5,12 @@ import './PaletteList.css';
 interface PaletteListProps {
   colorSets: ColorSet[];
   selectedStep: number;
-  allGeneratedPalettes: ColorRGBA[][];
+  currentPalettes: ColorRGBA[][];
   selectedPalette: number | null;
   onPaletteSelect: (paletteIndex: number) => void;
 }
 
-export function PaletteList({ colorSets, selectedStep, allGeneratedPalettes, selectedPalette, onPaletteSelect }: PaletteListProps) {
+export function PaletteList({ colorSets, selectedStep, currentPalettes: allGeneratedPalettes, selectedPalette, onPaletteSelect }: PaletteListProps) {
   if (colorSets.length === 0) {
     return (
       <div className="palette-list empty">

@@ -8,11 +8,12 @@ import './StepContent.css';
 interface StepContentProps {
   colorSets: ColorSet[];
   selectedStep: number;
+  currentPalettes: ColorRGBA[][];
   allGeneratedPalettes: ColorRGBA[][];
   selectedPalette: number | null;
 }
 
-export function StepContent({ colorSets, selectedStep, allGeneratedPalettes, selectedPalette }: StepContentProps) {
+export function StepContent({ colorSets, selectedStep, currentPalettes, allGeneratedPalettes, selectedPalette }: StepContentProps) {
   const [selectedTextColor, setSelectedTextColor] = useState<string>('');
   const [selectedElementColor, setSelectedElementColor] = useState<string>('');
 
@@ -32,7 +33,7 @@ export function StepContent({ colorSets, selectedStep, allGeneratedPalettes, sel
     );
   }
 
-  const selectedPaletteColors = allGeneratedPalettes[selectedPalette];
+  const selectedPaletteColors = currentPalettes[selectedPalette];
   if (!selectedPaletteColors) {
     return (
       <div className="step-content empty">

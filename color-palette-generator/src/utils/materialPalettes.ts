@@ -1,6 +1,7 @@
 import type { ColorLAB, ColorRGBA, PaletteMatch } from '../types/color';
-import { createColorLAB, createColorRGBA, createColorLCH, clampValue } from './colorClasses';
-import { convertLabToLch, convertRgbToLab, delinearizeColorValue, denormalizeLab } from './colorConversions';
+import { createColorLAB, createColorLCH, clampValue } from './colorClasses';
+import { convertLabToLch, convertRgbToLab } from './colorConversions';
+import { colorLABToChroma, chromaToColorRGBA } from './chromaIntegration';
 
 /** Material Design color palettes in LAB color space */
 export const MATERIAL_PALETTES: ColorLAB[][] = [
@@ -37,16 +38,25 @@ export const CHROMA_VALUES = [
   16.37591477, 16.27071136, 16.54160806, 17.35916727, 19.88410864
 ];
 
+/** Lightness values for background palette generation (high lightness for backgrounds) */
+export const BACKGROUND_LIGHTNESS_VALUES = [
+  98, 96, 94, 92, 90, 88, 86, 84, 82, 80
+];
+
+/** Chroma reduction factors for background palette generation (low chroma for subtle backgrounds) */
+export const BACKGROUND_CHROMA_FACTORS = [
+  0.05, 0.08, 0.12, 0.16, 0.20, 0.24, 0.28, 0.32, 0.36, 0.40
+];
+
 /**
- * Calculates the angle in degrees from a and b components of LAB color space.
- * @param a - The a component of LAB color
- * @param b - The b component of LAB color
+ * Calculates the angle in degrees from a LAB color using chroma.js LCH conversion.
+ * @param labColor - The LAB color object
  * @returns The angle in degrees (0-360)
  */
-function calculateAngle(a: number, b: number): number {
-  if (0.0001 > Math.abs(a) && 0.0001 > Math.abs(b)) return 0;
-  const angle = 180 * Math.atan2(a, b) / Math.PI;
-  return 0 <= angle ? angle : angle + 360;
+function calculateAngle(labColor: ColorLAB): number {
+  const chromaColor = colorLABToChroma(labColor);
+  const [, , h] = chromaColor.lch();
+  return h || 0; // Handle NaN for achromatic colors
 }
 
 /**
@@ -86,8 +96,8 @@ export function findClosestPalette(targetLab: ColorLAB, palettes: ColorLAB[][] =
       const c1_prime = Math.sqrt(Math.pow(a1_prime, 2) + Math.pow(paletteColor.b, 2));
       const c2_prime = Math.sqrt(Math.pow(a2_prime, 2) + Math.pow(targetLab.b, 2));
 
-      const h1_prime = calculateAngle(paletteColor.b, a1_prime);
-      const h2_prime = calculateAngle(targetLab.b, a2_prime);
+      const h1_prime = calculateAngle({ lightness: paletteColor.lightness, a: a1_prime, b: paletteColor.b, alpha: paletteColor.alpha });
+      const h2_prime = calculateAngle({ lightness: targetLab.lightness, a: a2_prime, b: targetLab.b, alpha: targetLab.alpha });
 
       const deltaL_prime = paletteColor.lightness - targetLab.lightness;
       const deltaC_prime = c2_prime - c1_prime;
@@ -138,6 +148,43 @@ export function findClosestPalette(targetLab: ColorLAB, palettes: ColorLAB[][] =
   }
   
   return { closestPalette, colorIndex };
+}
+
+/**
+ * Generates a background-friendly color palette from a base color.
+ * Creates very light, low-saturation colors perfect for UI backgrounds.
+ * @param baseColor - The base ColorRGBA to generate a background palette from
+ * @returns An array of 10 ColorRGBA objects representing background colors (0-225 steps)
+ */
+export function generateBackgroundColorPalette(baseColor: ColorRGBA): ColorRGBA[] {
+  // Convert base color to LCH for better color manipulation
+  const baseLab = convertRgbToLab(baseColor);
+  const baseLch = convertLabToLch(baseLab);
+  
+  return BACKGROUND_LIGHTNESS_VALUES.map((lightness, index) => {
+    // Use very low chroma for subtle background colors
+    const adjustedChroma = baseLch.chroma * BACKGROUND_CHROMA_FACTORS[index];
+    
+    // Create LCH color with high lightness and low chroma
+    const backgroundLch = createColorLCH(
+      lightness,
+      adjustedChroma,
+      baseLch.hue,
+      baseColor.alpha
+    );
+    
+    // Convert back to LAB then to RGB using chroma.js
+    const hueRadians = backgroundLch.hue * Math.PI / 180;
+    const labColor = createColorLAB(
+      backgroundLch.lightness,
+      backgroundLch.chroma * Math.cos(hueRadians),
+      backgroundLch.chroma * Math.sin(hueRadians),
+      backgroundLch.alpha
+    );
+    
+    const chromaColor = colorLABToChroma(labColor);
+    return chromaToColorRGBA(chromaColor);
+  });
 }
 
 /**
@@ -193,7 +240,7 @@ export function generateColorPalette(baseColor: ColorRGBA): ColorRGBA[] {
 
     maxLightnessClamping = Math.max(adjustedLch.lightness - 1.7, 0);
 
-    // Convert LCH back to LAB, then XYZ, then RGB
+    // Convert LCH back to LAB, then to RGB using chroma.js
     const hueRadians = adjustedLch.hue * Math.PI / 180;
     const labColorResult = createColorLAB(
       adjustedLch.lightness,
@@ -202,22 +249,8 @@ export function generateColorPalette(baseColor: ColorRGBA): ColorRGBA[] {
       adjustedLch.alpha
     );
 
-    // Convert LAB to XYZ
-    const labLightnessNormalized = (labColorResult.lightness + 16) / 116;
-    const xyzY = denormalizeLab(labLightnessNormalized);
-    const xyzX = denormalizeLab(labLightnessNormalized + labColorResult.a / 500) * 0.95047;
-    const xyzZ = denormalizeLab(labLightnessNormalized - labColorResult.b / 200) * 1.08883;
-
-    // Convert XYZ to linear RGB
-    let linearR = 3.2404542 * xyzX + -1.5371385 * xyzY + -0.4985314 * xyzZ;
-    let linearG = -0.969266 * xyzX + 1.8760108 * xyzY + 0.041556 * xyzZ;
-    let linearB = 0.0556434 * xyzX + -0.2040259 * xyzY + 1.0572252 * xyzZ;
-
-    return createColorRGBA(
-      clampValue(delinearizeColorValue(linearR), 0, 1),
-      clampValue(delinearizeColorValue(linearG), 0, 1),
-      clampValue(delinearizeColorValue(linearB), 0, 1),
-      labColorResult.alpha
-    );
+    // Use chroma.js for LAB to RGB conversion
+    const chromaColor = colorLABToChroma(labColorResult);
+    return chromaToColorRGBA(chromaColor);
   });
 }

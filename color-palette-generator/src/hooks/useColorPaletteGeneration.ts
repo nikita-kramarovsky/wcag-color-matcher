@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { ColorRGBA, ColorSet } from '../types/color';
-import { generateColorPalette } from '../utils/materialPalettes';
+import { generateColorPalette, generateBackgroundColorPalette } from '../utils/materialPalettes';
 import { convertRgbToHsl, convertHslToRgb, adjustHue } from '../utils/colorConversions';
 import { createColorRGBA } from '../utils/colorClasses';
 
@@ -41,7 +41,8 @@ export function useColorPaletteGeneration(baseColor?: ColorRGBA) {
       blackColor
     ];
 
-    const allGeneratedPalettes = allColors.map(color => generateColorPalette(color));
+    const allBasePalettes = allColors.map(color => generateColorPalette(color));
+    const allBackgroundPalettes = allColors.map(color => generateBackgroundColorPalette(color));
 
     const colorSets: ColorSet[] = [
       { colors: [baseColor], title: 'Primary Colour', paletteIndex: 0 },
@@ -69,10 +70,10 @@ export function useColorPaletteGeneration(baseColor?: ColorRGBA) {
     else if (lightness >= 0.1) suggestedStep = 8; // 800
     else suggestedStep = 9;                       // 900
 
-    return { colorSets, allGeneratedPalettes, suggestedStep };
+    return { colorSets, allBasePalettes, allBackgroundPalettes, suggestedStep };
   }, []);
 
-  const { colorSets, allGeneratedPalettes, suggestedStep } = useMemo(() => {
+  const { colorSets, allBasePalettes, allBackgroundPalettes, suggestedStep } = useMemo(() => {
     try {
       if (!baseColor) {
         throw Error();
@@ -81,14 +82,15 @@ export function useColorPaletteGeneration(baseColor?: ColorRGBA) {
       return generatePalettes(baseColor);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid color format');
-      return { colorSets: [], allGeneratedPalettes: [], suggestedStep: 5 };
+      return { colorSets: [], allBasePalettes: [], allBackgroundPalettes: [], suggestedStep: 5 };
     }
   }, [baseColor, generatePalettes]);
 
   return { 
     error,
     colorSets,
-    allGeneratedPalettes,
+    allBasePalettes,
+    allBackgroundPalettes,
     suggestedStep
   };
 }

@@ -8,18 +8,16 @@ import { PALETTE_STEPS } from './types/color';
 import './App.css';
 
 function App() {
-  const { baseColorHex, basePalette, lighterPalette, darkerPalette, updateBaseColor } = useColorPalette();
+  const { baseColorHex, basePalette, updateBaseColor } = useColorPalette();
   const [selectedStep, setSelectedStep] = useState(5); // Default to step 500 (index 5)
   const [colorDefaultStep, setColorDefaultStep] = useState(5);
   const [selectedPalette, setSelectedPalette] = useState<number | null>(0);
-  const [paletteType, setPaletteType] = useState<'base' | 'lighter' | 'darker'>('base');
+  const [paletteType, setPaletteType] = useState<'base' | 'lighter'>('base');
+  
+  const { colorSets, allBasePalettes, allBackgroundPalettes, suggestedStep, error } = basePalette;
   
   // Get current palette based on selection
-  const currentPalette = paletteType === 'base' ? basePalette : 
-                        paletteType === 'lighter' ? lighterPalette : 
-                        darkerPalette;
-  
-  const { colorSets, allGeneratedPalettes, suggestedStep, error } = currentPalette;
+  const currentPalettes = paletteType === 'base' ? allBasePalettes : allBackgroundPalettes;
   
   // Update selected step when suggested step changes
   useEffect(() => {
@@ -39,18 +37,17 @@ function App() {
           <label>Palette Type:</label>
           <select 
             value={paletteType} 
-            onChange={(e) => setPaletteType(e.target.value as 'base' | 'lighter' | 'darker')}
+            onChange={(e) => setPaletteType(e.target.value as 'base' | 'lighter')}
           >
             <option value="base">Base</option>
             <option value="lighter">Lighter</option>
-            <option value="darker">Darker</option>
           </select>
         </div>
         
         <PaletteList
           colorSets={colorSets}
           selectedStep={colorDefaultStep}
-          allGeneratedPalettes={allGeneratedPalettes}
+          currentPalettes={currentPalettes}
           selectedPalette={selectedPalette}
           onPaletteSelect={setSelectedPalette}
         />
@@ -62,14 +59,15 @@ function App() {
           selectedStep={selectedStep}
           onStepChange={setSelectedStep}
           selectedPalette={selectedPalette}
-          allGeneratedPalettes={allGeneratedPalettes}
+          currentPalettes={currentPalettes}
         />
         
         <div className="step-content-wrapper">
           <StepContent
             colorSets={colorSets}
             selectedStep={selectedStep}
-            allGeneratedPalettes={allGeneratedPalettes}
+            currentPalettes={currentPalettes}
+            allGeneratedPalettes={[...allBasePalettes, ...allBackgroundPalettes]}
             selectedPalette={selectedPalette}
           />
         </div>

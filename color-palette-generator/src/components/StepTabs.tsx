@@ -8,10 +8,10 @@ interface StepTabsProps {
   selectedStep: number;
   onStepChange: (stepIndex: number) => void;
   selectedPalette: number | null;
-  allGeneratedPalettes: ColorRGBA[][];
+  currentPalettes: ColorRGBA[][];
 }
 
-export function StepTabs({ steps, selectedStep, onStepChange, selectedPalette, allGeneratedPalettes }: StepTabsProps) {
+export function StepTabs({ steps, selectedStep, onStepChange, selectedPalette, currentPalettes: allGeneratedPalettes }: StepTabsProps) {
   const selectedPaletteColors = selectedPalette !== null ? allGeneratedPalettes[selectedPalette] : null;
 
   return (
