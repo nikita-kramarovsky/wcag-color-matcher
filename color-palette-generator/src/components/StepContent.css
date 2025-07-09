@@ -24,12 +24,67 @@
   font-weight: 600;
 }
 
+.current-colors {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
 .current-color {
   display: flex;
   align-items: center;
   gap: 12px;
   color: #666;
   font-size: 14px;
+}
+
+.current-color-input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.current-color-input .color-input-container {
+  padding: 0;
+}
+
+.current-color-input label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  margin: 0;
+}
+
+.current-color-input .contrast-info {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.current-color-input .contrast-ratio {
+  color: #666;
+  font-weight: 500;
+}
+
+.current-color-input .contrast-status {
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.current-color-input .contrast-status.pass {
+  background-color: #4caf50;
+  color: white;
+}
+
+.current-color-input .contrast-status.fail {
+  background-color: #f44336;
+  color: white;
 }
 
 .current-color .color-swatch {

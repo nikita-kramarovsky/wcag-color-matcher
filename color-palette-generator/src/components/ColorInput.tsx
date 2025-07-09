@@ -6,9 +6,10 @@ interface ColorInputProps {
   value: string;
   onChange: (value: string) => void;
   error?: string | null;
+  label?: string;
 }
 
-export function ColorInput({ value, onChange, error }: ColorInputProps) {
+export function ColorInput({ value, onChange, error, label }: ColorInputProps) {
   const [showPicker, setShowPicker] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
   
@@ -44,7 +45,7 @@ export function ColorInput({ value, onChange, error }: ColorInputProps) {
     <div className="color-input-container">
       <form onSubmit={handleSubmit} className="input-section">
         <div className="input-group">
-          <label htmlFor="baseColorInput">Enter Base Color (Hex):</label>
+          {label && <label htmlFor="baseColorInput">{label}:</label>}
           <div className="color-input-wrapper">
             <input
               type="text"

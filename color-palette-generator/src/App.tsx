@@ -32,6 +32,7 @@ function App() {
           value={baseColorHex}
           onChange={updateBaseColor}
           error={error}
+          label="Enter Base Color (Hex)"
         />
         
         <div className="palette-type-selector">

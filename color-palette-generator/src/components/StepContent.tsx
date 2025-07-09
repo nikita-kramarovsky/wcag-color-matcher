@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import type { ColorSet, ColorRGBA } from '../types/color';
-import { formatColorValue, getHexValue } from '../utils/colorConversions';
+import { formatColorValue, getHexValue, parseHexColor } from '../utils/colorConversions';
 import { calculateContrastRatio, getColorLightness } from '../utils/colorContrast';
 import { ColorDropdown } from './ColorDropdown';
+import { ColorInput } from './ColorInput';
 import './StepContent.css';
 
 interface StepContentProps {
@@ -106,19 +107,55 @@ export function StepContent({ colorSets, selectedStep, currentPalettes, allGener
   textCompatibleColors.sort((a, b) => b.ratio - a.ratio);
   elementCompatibleColors.sort((a, b) => b.ratio - a.ratio);
 
-  const selectedTextColorObj = textCompatibleColors.find(c => c.hex === selectedTextColor);
-  const selectedElementColorObj = elementCompatibleColors.find(c => c.hex === selectedElementColor);
+  const getCustomColorObj = (hexColor: string) => {
+    try {
+      const color = parseHexColor(hexColor);
+      const ratio = calculateContrastRatio(color, currentStepColor);
+      return { hex: hexColor, color, ratio, source: 'Custom' };
+    } catch {
+      return null;
+    }
+  };
+
+  const selectedTextColorObj = textCompatibleColors.find(c => c.hex === selectedTextColor) || 
+    (selectedTextColor ? getCustomColorObj(selectedTextColor) : null);
+  const selectedElementColorObj = elementCompatibleColors.find(c => c.hex === selectedElementColor) || 
+    (selectedElementColor ? getCustomColorObj(selectedElementColor) : null);
 
   return (
     <div className="step-content">
       <div className="step-header">
         <h2>Step {selectedStep} - Color Combinations</h2>
-        <div className="current-color">
-          <div 
-            className="color-swatch"
-            style={{ backgroundColor: formatColorValue(currentStepColor) }}
-          />
-          <span>Background: {getHexValue(currentStepColor)}</span>
+        <div className="current-colors">
+          <div className="current-color">
+            <div 
+              className="color-swatch"
+              style={{ backgroundColor: formatColorValue(currentStepColor) }}
+            />
+            <span>Background: {getHexValue(currentStepColor)}</span>
+          </div>
+          
+          <div className="current-color-input">
+            <ColorInput
+              value={selectedTextColorObj?.hex || ''}
+              onChange={setSelectedTextColor}
+              label={selectedTextColorObj ? 
+                `Text (${selectedTextColorObj.ratio.toFixed(1)}:1 ${selectedTextColorObj.ratio >= 4.5 ? 'PASS' : 'FAIL'})` : 
+                'Text'
+              }
+            />
+          </div>
+          
+          <div className="current-color-input">
+            <ColorInput
+              value={selectedElementColorObj?.hex || ''}
+              onChange={setSelectedElementColor}
+              label={selectedElementColorObj ? 
+                `Element (${selectedElementColorObj.ratio.toFixed(1)}:1 ${selectedElementColorObj.ratio >= 3.0 ? 'PASS' : 'FAIL'})` : 
+                'Element'
+              }
+            />
+          </div>
         </div>
       </div>
       
