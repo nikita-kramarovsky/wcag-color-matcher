@@ -27,6 +27,7 @@ function App() {
   return (
     <div className="app">
       <div className="left-container">
+        <h1>Material-Inspired Color Palette Generator</h1>
         <ColorInput
           value={baseColorHex}
           onChange={updateBaseColor}
