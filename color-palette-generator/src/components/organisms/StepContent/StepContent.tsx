@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import type { ColorSet, ColorRGBA } from '../types/color';
-import { formatColorValue, getHexValue, parseHexColor } from '../utils/colorConversions';
-import { calculateContrastRatio, getColorLightness } from '../utils/colorContrast';
-import { ColorDropdown } from './ColorDropdown';
-import { ColorInput } from './ColorInput';
+import type { ColorSet, ColorRGBA } from '../../../types/color';
+import { formatColorValue, getHexValue, parseHexColor } from '../../../utils/colorConversions';
+import { calculateContrastRatio, getColorLightness } from '../../../utils/colorContrast';
+import { ColorDropdown } from '../../molecules/ColorDropdown';
+import { ColorInput } from '../../molecules/ColorInput/ColorInput';
 import './StepContent.css';
 
 interface StepContentProps {
@@ -353,6 +353,164 @@ export function StepContent({ colorSets, selectedStep, currentPalettes, allGener
                     <strong>Border Element</strong>
                     <p>Content with colored border</p>
                   </div>
+                </div>
+                
+                <div className="navigation-examples">
+                  <div className="nav-tabs">
+                    <button 
+                      className="nav-tab active"
+                      style={{ 
+                        backgroundColor: formatColorValue(selectedElementColorObj.color),
+                        color: getColorLightness(selectedElementColorObj.color) < 0.5 ? '#ffffff' : '#000000',
+                        borderBottomColor: formatColorValue(selectedElementColorObj.color)
+                      }}
+                    >
+                      Active Tab
+                    </button>
+                    <button 
+                      className="nav-tab"
+                      style={{ 
+                        backgroundColor: 'transparent',
+                        color: formatColorValue(selectedElementColorObj.color),
+                        borderBottomColor: 'transparent'
+                      }}
+                    >
+                      Tab 2
+                    </button>
+                    <button 
+                      className="nav-tab"
+                      style={{ 
+                        backgroundColor: 'transparent',
+                        color: formatColorValue(selectedElementColorObj.color),
+                        borderBottomColor: 'transparent'
+                      }}
+                    >
+                      Tab 3
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="badge-examples">
+                  <span 
+                    className="badge"
+                    style={{ 
+                      backgroundColor: formatColorValue(selectedElementColorObj.color),
+                      color: getColorLightness(selectedElementColorObj.color) < 0.5 ? '#ffffff' : '#000000'
+                    }}
+                  >
+                    Badge
+                  </span>
+                  <span 
+                    className="badge outline"
+                    style={{ 
+                      backgroundColor: 'transparent',
+                      borderColor: formatColorValue(selectedElementColorObj.color),
+                      color: formatColorValue(selectedElementColorObj.color)
+                    }}
+                  >
+                    Outline Badge
+                  </span>
+                  <span 
+                    className="badge dot"
+                    style={{ 
+                      backgroundColor: formatColorValue(selectedElementColorObj.color)
+                    }}
+                  >
+                    •
+                  </span>
+                </div>
+                
+                <div className="progress-examples">
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill"
+                      style={{ 
+                        backgroundColor: formatColorValue(selectedElementColorObj.color),
+                        width: '65%'
+                      }}
+                    ></div>
+                  </div>
+                  <div className="progress-text" style={{ color: formatColorValue(selectedElementColorObj.color) }}>
+                    65% Complete
+                  </div>
+                </div>
+                
+                <div className="alert-examples">
+                  <div 
+                    className="alert"
+                    style={{ 
+                      backgroundColor: formatColorValue(selectedElementColorObj.color),
+                      color: getColorLightness(selectedElementColorObj.color) < 0.5 ? '#ffffff' : '#000000'
+                    }}
+                  >
+                    <strong>Alert Message</strong> - This is an alert component
+                  </div>
+                  <div 
+                    className="alert outline"
+                    style={{ 
+                      backgroundColor: 'transparent',
+                      borderColor: formatColorValue(selectedElementColorObj.color),
+                      color: formatColorValue(selectedElementColorObj.color)
+                    }}
+                  >
+                    <strong>Outline Alert</strong> - This is an outline alert
+                  </div>
+                </div>
+                
+                <div className="list-examples">
+                  <ul style={{ color: formatColorValue(selectedElementColorObj.color) }}>
+                    <li>List item with bullet</li>
+                    <li>Another list item</li>
+                    <li>Third list item</li>
+                  </ul>
+                  <ol style={{ color: formatColorValue(selectedElementColorObj.color) }}>
+                    <li>Numbered list item</li>
+                    <li>Second numbered item</li>
+                    <li>Third numbered item</li>
+                  </ol>
+                </div>
+                
+                <div className="link-examples">
+                  <a 
+                    href="#" 
+                    style={{ 
+                      color: formatColorValue(selectedElementColorObj.color),
+                      textDecoration: 'underline'
+                    }}
+                  >
+                    Link Example
+                  </a>
+                  <span> | </span>
+                  <a 
+                    href="#" 
+                    style={{ 
+                      color: formatColorValue(selectedElementColorObj.color),
+                      textDecoration: 'none'
+                    }}
+                  >
+                    Link No Underline
+                  </a>
+                </div>
+                
+                <div className="table-example">
+                  <table style={{ borderColor: formatColorValue(selectedElementColorObj.color) }}>
+                    <thead>
+                      <tr style={{ backgroundColor: formatColorValue(selectedElementColorObj.color) }}>
+                        <th style={{ color: getColorLightness(selectedElementColorObj.color) < 0.5 ? '#ffffff' : '#000000' }}>Column 1</th>
+                        <th style={{ color: getColorLightness(selectedElementColorObj.color) < 0.5 ? '#ffffff' : '#000000' }}>Column 2</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style={{ borderColor: formatColorValue(selectedElementColorObj.color) }}>Row 1, Cell 1</td>
+                        <td style={{ borderColor: formatColorValue(selectedElementColorObj.color) }}>Row 1, Cell 2</td>
+                      </tr>
+                      <tr>
+                        <td style={{ borderColor: formatColorValue(selectedElementColorObj.color) }}>Row 2, Cell 1</td>
+                        <td style={{ borderColor: formatColorValue(selectedElementColorObj.color) }}>Row 2, Cell 2</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>

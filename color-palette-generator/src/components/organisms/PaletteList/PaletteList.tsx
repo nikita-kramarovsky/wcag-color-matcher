@@ -1,5 +1,5 @@
-import type { ColorSet, ColorRGBA } from '../types/color';
-import { formatColorValue } from '../utils/colorConversions';
+import type { ColorSet, ColorRGBA } from '../../../types/color';
+import { formatColorValue } from '../../../utils/colorConversions';
 import './PaletteList.css';
 
 interface PaletteListProps {

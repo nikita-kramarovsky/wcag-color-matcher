@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ColorInput } from './components/ColorInput';
-import { StepTabs } from './components/StepTabs';
-import { PaletteList } from './components/PaletteList';
-import { StepContent } from './components/StepContent';
+import { ColorInput } from './components/molecules/ColorInput/ColorInput';
+import { StepTabs } from './components/molecules/StepTabs/StepTabs';
+import { PaletteList } from './components/organisms/PaletteList/PaletteList';
+import { StepContent } from './components/organisms/StepContent/StepContent';
 import { useColorPalette } from './hooks/useColorPalette';
 import { PALETTE_STEPS } from './types/color';
 import './App.css';
@@ -27,7 +27,7 @@ function App() {
   return (
     <div className="app">
       <div className="left-container">
-        <h1>Material-Inspired Color Palette Generator</h1>
+        <h1>WCAG Color Matcher Inspired By Material UI</h1>
         <ColorInput
           value={baseColorHex}
           onChange={updateBaseColor}

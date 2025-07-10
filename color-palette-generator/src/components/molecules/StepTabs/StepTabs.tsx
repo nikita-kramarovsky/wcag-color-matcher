@@ -1,6 +1,6 @@
-import type { PALETTE_STEPS, ColorRGBA } from '../types/color';
-import { formatColorValue, getHexValue } from '../utils/colorConversions';
-import { getColorLightness } from '../utils/colorContrast';
+import type { PALETTE_STEPS, ColorRGBA } from '../../../types/color';
+import { formatColorValue, getHexValue } from '../../../utils/colorConversions';
+import { getColorLightness } from '../../../utils/colorContrast';
 import './StepTabs.css';
 
 interface StepTabsProps {
