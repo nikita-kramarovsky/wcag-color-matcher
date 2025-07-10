@@ -113,7 +113,13 @@ export function StepContent({ colorSets, selectedStep, currentPalettes, allGener
       const ratio = calculateContrastRatio(color, currentStepColor);
       return { hex: hexColor, color, ratio, source: 'Custom' };
     } catch {
-      return null;
+      // For partial/invalid hex values, return a placeholder object so input still works
+      return { 
+        hex: hexColor, 
+        color: { red: 0, green: 0, blue: 0, alpha: 1 }, 
+        ratio: 0, 
+        source: 'Invalid' 
+      };
     }
   };
 
@@ -139,7 +145,7 @@ export function StepContent({ colorSets, selectedStep, currentPalettes, allGener
             <ColorInput
               value={selectedTextColorObj?.hex || ''}
               onChange={setSelectedTextColor}
-              label={selectedTextColorObj ? 
+              label={selectedTextColorObj && selectedTextColorObj.source !== 'Invalid' ? 
                 `Text (${selectedTextColorObj.ratio.toFixed(1)}:1 ${selectedTextColorObj.ratio >= 4.5 ? 'PASS' : 'FAIL'})` : 
                 'Text'
               }
@@ -150,7 +156,7 @@ export function StepContent({ colorSets, selectedStep, currentPalettes, allGener
             <ColorInput
               value={selectedElementColorObj?.hex || ''}
               onChange={setSelectedElementColor}
-              label={selectedElementColorObj ? 
+              label={selectedElementColorObj && selectedElementColorObj.source !== 'Invalid' ? 
                 `Element (${selectedElementColorObj.ratio.toFixed(1)}:1 ${selectedElementColorObj.ratio >= 3.0 ? 'PASS' : 'FAIL'})` : 
                 'Element'
               }
