@@ -1,6 +1,8 @@
 .step-content {
-  padding: 20px;
-  min-height: 100%;
+  padding: 20px 20px 0 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .step-content.empty {
@@ -98,6 +100,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .text-column,
@@ -105,6 +110,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  height: 100%;
+  overflow: hidden;
 }
 
 .text-column h3,
@@ -418,6 +425,7 @@
 
 .selected-example {
   margin-top: 16px;
+  overflow: auto;
 }
 
 .selected-example h4 {
