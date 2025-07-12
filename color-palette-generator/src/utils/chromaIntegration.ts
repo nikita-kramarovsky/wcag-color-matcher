@@ -90,7 +90,7 @@ export function parseHexColorWithChroma(hexString: string): ColorRGBA {
   try {
     const color = chroma(hexString);
     return chromaToColorRGBA(color);
-  } catch (error) {
+  } catch {
     throw new Error(`Invalid hex color string: ${hexString}`);
   }
 }

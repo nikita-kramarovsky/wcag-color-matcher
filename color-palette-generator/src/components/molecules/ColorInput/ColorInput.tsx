@@ -1,45 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { HexColorPicker } from 'react-colorful';
 import './ColorInput.css';
+import { useColorInputPresenter } from './ColorInput.presenter';
+import type { ColorInputProps } from './ColorInput.types';
+import { ColorSwatchButton } from '../../atoms/ColorSwatchButton';
+import { ColorPickerPopup } from '../../molecules/ColorPickerPopup';
 
-interface ColorInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  error?: string | null;
-  label?: string;
-}
-
-export function ColorInput({ value, onChange, error, label }: ColorInputProps) {
-  const [showPicker, setShowPicker] = useState(false);
-  const pickerRef = useRef<HTMLDivElement>(null);
-  
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
-  const handleColorChange = (color: string) => {
-    onChange(color);
-  };
-
-  const togglePicker = () => {
-    setShowPicker(!showPicker);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (pickerRef.current && !pickerRef.current.contains(event.target as Node)) {
-        setShowPicker(false);
-      }
-    };
-
-    if (showPicker) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showPicker]);
+export function ColorInput(props: ColorInputProps) {
+  const { showPicker, pickerRef, handleSubmit, handleColorChange, togglePicker, value, onChange, error, label } = useColorInputPresenter(props);
 
   return (
     <div className="color-input-container">
@@ -56,17 +22,13 @@ export function ColorInput({ value, onChange, error, label }: ColorInputProps) {
               className={error ? 'error' : ''}
             />
             <div className="color-picker-container" ref={pickerRef}>
-              <button
-                type="button"
-                className="color-swatch"
-                onClick={togglePicker}
-                style={{ backgroundColor: value.length === 7 && value.startsWith('#') ? value : '#6200EE' }}
-                title="Pick a color"
-              />
+              <ColorSwatchButton
+              onClick={togglePicker}
+              color={value.length === 7 && value.startsWith('#') ? value : '#6200EE'}
+              title="Pick a color"
+            />
               {showPicker && (
-                <div className="color-picker-popup">
-                  <HexColorPicker color={value} onChange={handleColorChange} />
-                </div>
+                <ColorPickerPopup color={value} onChange={handleColorChange} />
               )}
             </div>
           </div>

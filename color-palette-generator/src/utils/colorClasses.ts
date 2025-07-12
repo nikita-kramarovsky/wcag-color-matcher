@@ -119,7 +119,7 @@ export function createColorFromString(colorString: string): ColorRGBA {
   try {
     const color = chroma(colorString);
     return chromaToColorRGBA(color);
-  } catch (error) {
+  } catch {
     throw new Error(`Invalid color string: ${colorString}`);
   }
 }

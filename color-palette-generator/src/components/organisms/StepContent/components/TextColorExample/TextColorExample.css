@@ -1,0 +1,37 @@
+.text-example {
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.text-example h1,
+.text-example h2,
+.text-example h3,
+.text-example p,
+.text-example strong,
+.text-example em,
+.text-example small,
+.text-example code {
+  margin-bottom: 10px;
+}
+
+.text-example h1 {
+  font-size: 2em;
+}
+
+.text-example h2 {
+  font-size: 1.5em;
+}
+
+.text-example h3 {
+  font-size: 1.2em;
+}
+
+.text-example p {
+  line-height: 1.5;
+}
+
+.text-example code {
+  font-family: 'Courier New', Courier, monospace;
+}

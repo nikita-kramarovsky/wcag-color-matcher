@@ -1,0 +1,11 @@
+.alert {
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.alert.outline {
+  background-color: transparent;
+  border: 1px solid;
+}

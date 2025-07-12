@@ -7,7 +7,7 @@ export function useColorPalette(initialColor: string = '#6200EE') {
   const baseColor = useMemo(() => {
     try {
       return parseHexColor(baseColorHex);
-    } catch (err) {
+    } catch {
       return undefined;
     }
   }, [baseColorHex]);

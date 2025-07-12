@@ -1,16 +1,11 @@
-import type { ColorSet, ColorRGBA } from '../../../types/color';
-import { formatColorValue } from '../../../utils/colorConversions';
 import './PaletteList.css';
+import { usePaletteListPresenter } from './PaletteList.presenter';
+import type { PaletteListProps } from './PaletteList.types';
+import { PaletteColorPreview } from '../../atoms/PaletteColorPreview';
 
-interface PaletteListProps {
-  colorSets: ColorSet[];
-  selectedStep: number;
-  currentPalettes: ColorRGBA[][];
-  selectedPalette: number | null;
-  onPaletteSelect: (paletteIndex: number) => void;
-}
+export function PaletteList(props: PaletteListProps) {
+  const { colorSets, getPaletteColorPreviewProps } = usePaletteListPresenter(props);
 
-export function PaletteList({ colorSets, selectedStep, currentPalettes: allGeneratedPalettes, selectedPalette, onPaletteSelect }: PaletteListProps) {
   if (colorSets.length === 0) {
     return (
       <div className="palette-list empty">
@@ -26,21 +21,17 @@ export function PaletteList({ colorSets, selectedStep, currentPalettes: allGener
           <div className="palette-name">{colorSet.title}</div>
           <div className="palette-colors">
             {colorSet.colors.map((_, colorIndex) => {
-              const paletteIndex = colorSet.paletteIndex + colorIndex;
-              const palette = allGeneratedPalettes[paletteIndex];
+              const previewProps = getPaletteColorPreviewProps(setIndex, colorIndex);
               
-              if (!palette || !palette[selectedStep]) return null;
-              
-              const color = palette[selectedStep];
-              const isSelected = selectedPalette === paletteIndex;
+              if (!previewProps) return null;
               
               return (
-                <div
+                <PaletteColorPreview
                   key={colorIndex}
-                  className={`palette-color-preview ${isSelected ? 'selected' : ''}`}
-                  style={{ backgroundColor: formatColorValue(color) }}
-                  title={formatColorValue(color)}
-                  onClick={() => onPaletteSelect(paletteIndex)}
+                  backgroundColor={previewProps.backgroundColor}
+                  title={previewProps.title}
+                  onClick={previewProps.onClick}
+                  isSelected={previewProps.isSelected}
                 />
               );
             })}

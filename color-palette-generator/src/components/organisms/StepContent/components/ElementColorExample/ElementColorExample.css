@@ -1,0 +1,119 @@
+.element-examples {
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-elements .form-group {
+  margin-bottom: 15px;
+}
+
+.form-elements label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+}
+
+.form-elements input[type="text"],
+.form-elements select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.icon-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.icon-group svg {
+  width: 24px;
+  height: 24px;
+}
+
+.sample-card {
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-size: 0.9em;
+}
+
+.sample-card h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.sample-border {
+  padding: 15px;
+  border: 2px solid;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-size: 0.9em;
+}
+
+.navigation-examples .nav-tabs {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  margin-top: 20px;
+}
+
+.navigation-examples .nav-tab {
+  padding: 10px 15px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.navigation-examples .nav-tab.active {
+  border-bottom-color: currentColor;
+}
+
+.list-examples ul,
+.list-examples ol {
+  margin-top: 20px;
+  padding-left: 20px;
+  font-size: 0.9em;
+}
+
+.list-examples li {
+  margin-bottom: 5px;
+}
+
+.link-examples {
+  margin-top: 20px;
+  font-size: 0.9em;
+}
+
+.link-examples a {
+  margin-right: 5px;
+}
+
+.table-example {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.table-example table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.table-example th,
+.table-example td {
+  padding: 10px;
+  border: 1px solid;
+  text-align: left;
+}
+
+.table-example th {
+  font-weight: bold;
+}
