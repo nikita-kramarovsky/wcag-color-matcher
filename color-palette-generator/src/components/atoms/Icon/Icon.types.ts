@@ -1,6 +1,6 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties } from 'react';
 
 export interface IconProps {
-  children: ReactNode;
+  icon: string;
   style?: CSSProperties;
 }
