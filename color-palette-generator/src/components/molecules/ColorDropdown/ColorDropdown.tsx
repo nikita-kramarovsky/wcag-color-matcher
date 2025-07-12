@@ -1,5 +1,5 @@
 import { ColorDropdownTrigger } from './components/ColorDropdownTrigger';
-import { ColorDropdownMenu } from './components';
+import { ColorDropdownMenu } from './components/ColorDropdownMenu';
 import { useColorDropdownPresenter } from './ColorDropdown.presenter';
 import type { ColorDropdownProps } from './ColorDropdown.types';
 import './ColorDropdown.css';

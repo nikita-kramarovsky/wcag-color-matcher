@@ -1,5 +1,5 @@
 import './ColorDropdownMenu.css';
-import { ColorDropdownOption } from './ColorDropdownOption';
+import { ColorDropdownOption } from '../ColorDropdownOption';
 import { useColorDropdownMenuPresenter } from './ColorDropdownMenu.presenter';
 import type { ColorDropdownMenuProps } from './ColorDropdownMenu.types';
 

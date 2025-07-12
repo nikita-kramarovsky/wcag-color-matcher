@@ -1,13 +1,7 @@
 import './ColorDropdownTrigger.css';
-import { formatColorValue } from '../../../../utils/colorConversions';
-import type { ColorOption } from '../ColorDropdown.types';
+import { formatColorValue } from '../../../../../utils/colorConversions';
 
-interface ColorDropdownTriggerProps {
-  isOpen: boolean;
-  onClick: () => void;
-  selectedOption: ColorOption | undefined;
-  placeholder: string;
-}
+import type { ColorDropdownTriggerProps } from './ColorDropdownTrigger.types';
 
 export function ColorDropdownTrigger({ isOpen, onClick, selectedOption, placeholder }: ColorDropdownTriggerProps) {
   return (

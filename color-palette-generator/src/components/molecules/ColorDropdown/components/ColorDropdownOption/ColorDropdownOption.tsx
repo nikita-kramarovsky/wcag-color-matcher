@@ -1,12 +1,7 @@
 import './ColorDropdownOption.css';
-import { formatColorValue } from '../../../../utils/colorConversions';
-import type { ColorOption } from '../ColorDropdown.types';
+import { formatColorValue } from '../../../../../utils/colorConversions';
 
-interface ColorDropdownOptionProps {
-  option: ColorOption;
-  isSelected: boolean;
-  onSelect: (value: string) => void;
-}
+import type { ColorDropdownOptionProps } from './ColorDropdownOption.types';
 
 export function ColorDropdownOption({ option, isSelected, onSelect }: ColorDropdownOptionProps) {
   return (
