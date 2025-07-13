@@ -4,7 +4,8 @@ import { StepTabs } from './components/molecules/StepTabs/StepTabs';
 import { PaletteList } from './components/organisms/PaletteList/PaletteList';
 import { StepContent } from './components/organisms/StepContent/StepContent';
 import { useColorPalette } from './hooks/useColorPalette';
-import { PALETTE_STEPS } from './types/color';
+import { PALETTE_STEPS, type PaletteType } from './types/color';
+import { PaletteTypeTabs } from './components/molecules/PaletteTypeTabs/PaletteTypeTabs';
 import './App.css';
 
 function App() {
@@ -12,7 +13,7 @@ function App() {
   const [selectedStep, setSelectedStep] = useState(5); // Default to step 500 (index 5)
   const [colorDefaultStep, setColorDefaultStep] = useState(5);
   const [selectedPalette, setSelectedPalette] = useState<number | null>(0);
-  const [paletteType, setPaletteType] = useState<'base' | 'lighter'>('base');
+  const [paletteType, setPaletteType] = useState<PaletteType>('base');
   
   const { colorSets, allBasePalettes, allBackgroundPalettes, suggestedStep, error } = basePalette;
   
@@ -37,13 +38,10 @@ function App() {
         
         <div className="palette-type-selector">
           <label>Palette Type:</label>
-          <select 
-            value={paletteType} 
-            onChange={(e) => setPaletteType(e.target.value as 'base' | 'lighter')}
-          >
-            <option value="base">Base</option>
-            <option value="lighter">Lighter</option>
-          </select>
+          <PaletteTypeTabs
+            selectedPaletteType={paletteType}
+            onPaletteTypeChange={setPaletteType}
+          />
         </div>
         
         <PaletteList

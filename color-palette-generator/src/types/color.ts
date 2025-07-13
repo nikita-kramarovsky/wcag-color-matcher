@@ -54,3 +54,6 @@ export interface ColorSet {
 
 export const PALETTE_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900] as const;
 export type PaletteStep = typeof PALETTE_STEPS[number];
+
+export const PALETTE_TYPES = ['lighter', 'base'] as const;
+export type PaletteType = typeof PALETTE_TYPES[number];
