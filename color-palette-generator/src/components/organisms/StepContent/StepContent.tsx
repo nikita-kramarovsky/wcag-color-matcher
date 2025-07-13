@@ -3,6 +3,7 @@ import { ColorDropdown } from '../../molecules/ColorDropdown';
 import { ColorInput } from '../../molecules/ColorInput';
 import { TextColorExample } from './components/TextColorExample';
 import { ElementColorExample } from './components/ElementColorExample';
+import { TextOnElementExample } from './components/TextOnElementExample';
 import { useStepContentPresenter } from './StepContent.presenter';
 import type { StepContentProps } from './StepContent.types';
 
@@ -26,6 +27,10 @@ export function StepContent(props: StepContentProps) {
     getForegroundColor,
     getHexValue,
     formatColorValue,
+    selectedTextOnElementColor,
+    setSelectedTextOnElementColor,
+    textOnElementCompatibleColors,
+    selectedTextOnElementColorObj,
   } = useStepContentPresenter(props);
 
   if (colorSets.length === 0) {
@@ -115,6 +120,30 @@ export function StepContent(props: StepContentProps) {
             <ElementColorExample
               currentStepColor={currentStepColor}
               selectedElementColorObj={selectedElementColorObj}
+              getBackgroundColor={getBackgroundColor}
+              getForegroundColor={getForegroundColor}
+            />
+          )}
+        </div>
+
+        <div className="text-on-element-column">
+          <h3>Text on Element Colors (4.5:1 contrast)</h3>
+          {selectedElementColorObj ? (
+            <ColorDropdown
+              options={textOnElementCompatibleColors}
+              value={selectedTextOnElementColor}
+              onChange={setSelectedTextOnElementColor}
+              placeholder="Select a text color..."
+            />
+          ) : (
+            <div className="empty-placeholder">Select an element color to see compatible text colors.</div>
+          )}
+          
+          {(selectedTextOnElementColorObj && selectedElementColorObj) && (
+            <TextOnElementExample
+              currentStepColor={currentStepColor}
+              selectedElementColorObj={selectedElementColorObj}
+              selectedTextOnElementColorObj={selectedTextOnElementColorObj}
               getBackgroundColor={getBackgroundColor}
               getForegroundColor={getForegroundColor}
             />

@@ -7,11 +7,17 @@ import type { StepContentProps } from './StepContent.types';
 export const useStepContentPresenter = ({ colorSets, selectedStep, currentPalettes, allGeneratedPalettes, selectedPalette }: StepContentProps) => {
   const [selectedTextColor, setSelectedTextColor] = useState<string>('');
   const [selectedElementColor, setSelectedElementColor] = useState<string>('');
+  const [selectedTextOnElementColor, setSelectedTextOnElementColor] = useState<string>('');
 
   useEffect(() => {
     setSelectedTextColor('');
     setSelectedElementColor('');
+    setSelectedTextOnElementColor('');
   }, [selectedPalette, selectedStep]);
+
+  useEffect(() => {
+    setSelectedTextOnElementColor('');
+  }, [selectedElementColor]);
 
   const selectedPaletteColors = selectedPalette !== null ? currentPalettes[selectedPalette] : null;
   const currentStepColor = selectedPaletteColors ? selectedPaletteColors[selectedStep] : null;
@@ -36,6 +42,22 @@ export const useStepContentPresenter = ({ colorSets, selectedStep, currentPalett
     return colorSet.title;
   };
 
+  const getCustomColorObj = (hexColor: string, baseColor: ColorRGBA) => {
+    try {
+      const color = parseHexColor(hexColor);
+      const ratio = calculateContrastRatio(color, baseColor);
+      return { hex: hexColor, color, ratio, source: 'Custom' };
+    } catch {
+      // For partial/invalid hex values, return a placeholder object so input still works
+      return { 
+        hex: hexColor, 
+        color: { red: 0, green: 0, blue: 0, alpha: 1 }, 
+        ratio: 0, 
+        source: 'Invalid' 
+      };
+    }
+  };
+
   const textCompatibleColors: Array<{
     hex: string;
     ratio: number;
@@ -43,6 +65,12 @@ export const useStepContentPresenter = ({ colorSets, selectedStep, currentPalett
     color: ColorRGBA;
   }> = [];
   const elementCompatibleColors: Array<{
+    hex: string;
+    ratio: number;
+    source: string;
+    color: ColorRGBA;
+  }> = [];
+  const textOnElementCompatibleColors: Array<{
     hex: string;
     ratio: number;
     source: string;
@@ -71,27 +99,29 @@ export const useStepContentPresenter = ({ colorSets, selectedStep, currentPalett
     elementCompatibleColors.sort((a, b) => b.ratio - a.ratio);
   }
 
-  const getCustomColorObj = (hexColor: string) => {
-    try {
-      if (!currentStepColor) throw new Error("Current step color is null");
-      const color = parseHexColor(hexColor);
-      const ratio = calculateContrastRatio(color, currentStepColor);
-      return { hex: hexColor, color, ratio, source: 'Custom' };
-    } catch {
-      // For partial/invalid hex values, return a placeholder object so input still works
-      return { 
-        hex: hexColor, 
-        color: { red: 0, green: 0, blue: 0, alpha: 1 }, 
-        ratio: 0, 
-        source: 'Invalid' 
-      };
-    }
-  };
-
   const selectedTextColorObj = textCompatibleColors.find(c => c.hex === selectedTextColor) || 
-    (selectedTextColor ? getCustomColorObj(selectedTextColor) : null);
+    (selectedTextColor && currentStepColor ? getCustomColorObj(selectedTextColor, currentStepColor) : null);
   const selectedElementColorObj = elementCompatibleColors.find(c => c.hex === selectedElementColor) || 
-    (selectedElementColor ? getCustomColorObj(selectedElementColor) : null);
+    (selectedElementColor && currentStepColor ? getCustomColorObj(selectedElementColor, currentStepColor) : null);
+
+  if (selectedElementColorObj && selectedElementColorObj.source !== 'Invalid') {
+    allGeneratedPalettes.forEach((palette, paletteIndex) => {
+      palette.forEach((color, stepIndex) => {
+        const contrast = calculateContrastRatio(color, selectedElementColorObj.color);
+        const hex = getHexValue(color);
+        const paletteName = getPaletteName(paletteIndex);
+        const source = `${paletteName} - Step ${stepIndex}`;
+
+        if (contrast >= 4.5) {
+          textOnElementCompatibleColors.push({ color, hex, ratio: contrast, source });
+        }
+      });
+    });
+    textOnElementCompatibleColors.sort((a, b) => b.ratio - a.ratio);
+  }
+
+  const selectedTextOnElementColorObj = textOnElementCompatibleColors.find(c => c.hex === selectedTextOnElementColor) || 
+    (selectedTextOnElementColor && selectedElementColorObj ? getCustomColorObj(selectedTextOnElementColor, selectedElementColorObj.color) : null);
 
   const getTextColorLabel = () => {
     if (selectedTextColorObj && selectedTextColorObj.source !== 'Invalid') {
@@ -129,5 +159,9 @@ export const useStepContentPresenter = ({ colorSets, selectedStep, currentPalett
     getForegroundColor,
     getHexValue,
     formatColorValue,
+    selectedTextOnElementColor,
+    setSelectedTextOnElementColor,
+    textOnElementCompatibleColors,
+    selectedTextOnElementColorObj,
   };
 };
