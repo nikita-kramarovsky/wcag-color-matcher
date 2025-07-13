@@ -7,8 +7,8 @@ A React TypeScript application that generates Material Design-inspired color pal
 - **Color Palette Generation**: Generate complete 10-step color palettes (50-900) from any base color
 - **Multiple Harmony Types**: Primary, complementary, split-complementary, analogous, and triadic color schemes
 - **Material Design Accuracy**: Uses the same LAB color space transformations as Google's Material Design
-- **Accessibility Analysis**: Real-time contrast ratio calculations for WCAG compliance
-- **Interactive Interface**: Live preview with hex codes and contrast information
+- **Accessibility Analysis**: Real-time contrast ratio calculations for WCAG compliance, including text on background, element on background, and text on element contrast.
+- **Interactive Interface**: Live preview with hex codes and contrast information, with dynamic examples for text and element colors.
 - **Responsive Design**: Works on desktop, tablet, and mobile devices
 
 ## Getting Started
@@ -48,21 +48,19 @@ npm run build
 
 ```
 src/
-├── components/          # React components
-│   ├── ColorInput.tsx   # Color input form
-│   ├── ColorStep.tsx    # Individual color step with contrast info
-│   ├── ColorRamp.tsx    # Color palette ramp
-│   ├── PaletteSection.tsx # Grouped palette sections
-│   └── PaletteDisplay.tsx # Main palette display
-├── hooks/
+├── components/          # React components organized by Atomic Design principles
+│   ├── atoms/           # Smallest, indivisible UI elements (e.g., Button, Icon)
+│   ├── molecules/       # Groups of atoms functioning as a unit (e.g., ColorInput, StepTabs)
+│   └── organisms/       # Groups of molecules and atoms forming complex sections (e.g., PaletteList, StepContent)
+├── hooks/               # Custom React hooks for logic encapsulation
 │   └── useColorPalette.ts # Main color palette logic
-├── types/
-│   └── color.ts         # TypeScript type definitions
-├── utils/
-│   ├── colorClasses.ts  # Color constructors and utilities
-│   ├── colorConversions.ts # Color space conversions
-│   ├── colorContrast.ts # Contrast calculations
-│   └── materialPalettes.ts # Material Design palette data
+├── types/               # TypeScript type definitions
+│   └── color.ts
+├── utils/               # Utility functions for color manipulation and calculations
+│   ├── colorClasses.ts
+│   ├── colorConversions.ts
+│   ├── colorContrast.ts
+│   └── materialPalettes.ts
 └── App.tsx             # Main application component
 ```
 
@@ -106,6 +104,7 @@ const { baseColorHex, colorSets, allGeneratedPalettes, error, updateBaseColor } 
 
 - **React 18** with TypeScript
 - **Vite** for fast development and building
+- **vite-plugin-svgr** for importing SVGs as React components
 - **CSS Modules** for component-scoped styling
 - **Google Fonts** (Roboto) for Material Design typography
 - **Pure JavaScript** color science (no external color libraries)
