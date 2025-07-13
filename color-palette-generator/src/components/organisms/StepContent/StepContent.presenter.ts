@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { formatColorValue, getHexValue, parseHexColor } from '../../../utils/colorConversions';
 import { calculateContrastRatio, getColorLightness } from '../../../utils/colorContrast';
 import type { ColorRGBA } from '../../../types/color';
@@ -7,6 +7,11 @@ import type { StepContentProps } from './StepContent.types';
 export const useStepContentPresenter = ({ colorSets, selectedStep, currentPalettes, allGeneratedPalettes, selectedPalette }: StepContentProps) => {
   const [selectedTextColor, setSelectedTextColor] = useState<string>('');
   const [selectedElementColor, setSelectedElementColor] = useState<string>('');
+
+  useEffect(() => {
+    setSelectedTextColor('');
+    setSelectedElementColor('');
+  }, [selectedPalette, selectedStep]);
 
   const selectedPaletteColors = selectedPalette !== null ? currentPalettes[selectedPalette] : null;
   const currentStepColor = selectedPaletteColors ? selectedPaletteColors[selectedStep] : null;
