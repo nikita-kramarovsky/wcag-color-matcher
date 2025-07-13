@@ -107,7 +107,6 @@ const { baseColorHex, colorSets, allGeneratedPalettes, error, updateBaseColor } 
 - **vite-plugin-svgr** for importing SVGs as React components
 - **CSS Modules** for component-scoped styling
 - **Google Fonts** (Roboto) for Material Design typography
-- **Pure JavaScript** color science (no external color libraries)
 
 ## Browser Support
 
