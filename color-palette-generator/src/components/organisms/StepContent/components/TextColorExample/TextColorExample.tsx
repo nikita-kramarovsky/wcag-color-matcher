@@ -17,7 +17,7 @@ export function TextColorExample({ currentStepColor, selectedTextColorObj, getBa
         <p>This is sample body text to demonstrate readability with this color combination. The contrast ratio is {selectedTextColorObj.ratio.toFixed(1)}:1.</p>
         <p><strong>Bold text example</strong> and <em>italic text example</em></p>
         <small>Small text and fine print</small>
-        <div style={{ marginTop: '10px' }}>
+        <div>
           <code style={{ 
             backgroundColor: getBackgroundColor(selectedTextColorObj.color), 
             color: getBackgroundColor(currentStepColor),

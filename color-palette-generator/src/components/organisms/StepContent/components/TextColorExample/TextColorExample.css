@@ -3,17 +3,9 @@
   border-radius: 8px;
   margin-top: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.text-example h1,
-.text-example h2,
-.text-example h3,
-.text-example p,
-.text-example strong,
-.text-example em,
-.text-example small,
-.text-example code {
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .text-example h1 {
