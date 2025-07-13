@@ -1,6 +1,7 @@
-# Material-Inspired Color Palette Generator
+# WCAG Color Matcher Inspired By Material UI ![Color Palette Icon](./public/color-palette-icon.svg)
 
-A React TypeScript application that generates Material Design-inspired color palettes with accessibility contrast analysis.
+
+A React TypeScript application designed to help users create WCAG-compliant color palettes, inspired by Material UI's design principles.
 
 ## Features
 
